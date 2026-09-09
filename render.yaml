@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: devmetrix-api
+    runtime: image
+    image:
+      url: .
+    dockerfilePath: Dockerfile.fastapi
+    port: 8000
+    healthCheckPath: /
+    envVars:
+      - key: DATA_PATH
+        value: /app/data/cleaned_survey_data.csv
+
+  - type: web
+    name: devmetrix-dashboard
+    runtime: image
+    image:
+      url: .
+    dockerfilePath: Dockerfile.streamlit
+    port: 8501
+    envVars:
+      - key: BACKEND_URL
+        fromService:
+          name: devmetrix-api
+          property: host
